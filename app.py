@@ -8,14 +8,16 @@ app = Flask(__name__)
 api_key = os.environ.get("GEMINI_API_KEY")
 genai.configure(api_key=api_key)
 
+# 모델 리스트 다 훑지 말고 그냥 바로 선언해 ㅋ
 def get_model():
-    for m in genai.list_models():
-        if 'generateContent' in m.supported_generation_methods:
-            return genai.GenerativeModel(
-                model_name=m.name,
-                system_instruction="너의 이름은 '에이아이'다. 무조건 한국어로만, 모든걸 자세하게, 친절하게, 존댓말 사용해서 해줘. 화내면 안돼. 주인 이름은 이세미다."
-            )
-    return None
+    try:
+        # gemini-1.5-flash-latest가 제일 가볍고 빠름
+        return genai.GenerativeModel(
+            model_name='gemini-1.5-flash-latest', 
+            system_instruction="너의 이름은 'AI'다. 대답은 무조건 한국어로만, 자세하고 존댓말, 화내지마. 주인은 이세미다."
+        )
+    except:
+        return None
 
 model = get_model()
 
@@ -39,3 +41,4 @@ if __name__ == '__main__':
     # 배포용 포트 설정 (Render는 알아서 잡지만 일단 이렇게 써 ㅋ)
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
+
