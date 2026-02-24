@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>현우 AI 앱</title>
+    <style>
+        body { background: #f0f4f8; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; }
+        .container { width: 350px; padding: 40px; background: #f0f4f8; border-radius: 50px; box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff; text-align: center; }
+        .chat-box { height: 150px; background: #e0e5ec; border-radius: 30px; padding: 20px; margin-bottom: 20px; box-shadow: inset 6px 6px 12px #b8b9be, inset -6px -6px 12px #ffffff; overflow-y: auto; color: #555; }
+        input { width: 80%; padding: 15px; border: none; border-radius: 20px; background: #f0f4f8; box-shadow: inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff; outline: none; margin-bottom: 10px; }
+        button { padding: 10px 20px; border-radius: 20px; border: none; background: #a2c2e0; color: white; cursor: pointer; box-shadow: 4px 4px 8px #bebebe; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3 style="color: #88a1b9;">AI인데요;;</h3>
+        <div id="chat-box" class="chat-box">야, 말해봐 ㅋ</div>
+        <input type="text" id="user-input" placeholder="뭐라도 써봐...">
+        <button onclick="sendMsg()">전송</button>
+    </div>
+
+    <script>
+        async function sendMsg() {
+            const input = document.getElementById('user-input');
+            const chatBox = document.getElementById('chat-box');
+            if (!input.value) return;
+
+            chatBox.innerText = "생각 중... 기달 ㅋ";
+            try {
+                const res = await fetch('/ask', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({message: input.value})
+                });
+                const data = await res.json();
+                chatBox.innerText = data.response;
+            } catch (e) {
+                chatBox.innerText = "에러가 떴다;;";
+            }
+            input.value = '';
+        }
+    </script>
+</body>
+</html>
