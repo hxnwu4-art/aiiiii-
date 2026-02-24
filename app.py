@@ -28,17 +28,18 @@ def index():
 @app.route('/ask', methods=['POST'])
 def ask():
     if not model:
-        return jsonify({'response': '서버 설정 확인해 ㅋ'})
+        return jsonify({'response': '서버 설정 확인해주세요.'})
     
     user_msg = request.json.get('message')
     try:
         response = model.generate_content(user_msg)
         return jsonify({'response': response.text})
     except Exception as e:
-        return jsonify({'response': '에러남 ㅋ'})
+        return jsonify({'response': '에러가 났습니다.'})
 
 if __name__ == '__main__':
     # 배포용 포트 설정 (Render는 알아서 잡지만 일단 이렇게 써 ㅋ)
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
+
 
